@@ -1,2 +1,0 @@
-/usr/bin/ar qc libBSpline.a  CMakeFiles/BSpline.dir/BSpline.cpp.o CMakeFiles/BSpline.dir/Legendre.cpp.o CMakeFiles/BSpline.dir/Newton.cpp.o CMakeFiles/BSpline.dir/Parametizer.cpp.o
-/usr/bin/ranlib libBSpline.a

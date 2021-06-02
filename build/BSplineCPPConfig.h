@@ -1,2 +1,0 @@
-#define BSplineCPP_VERSION_MAJOR 1
-#define BSplineCPP_VERSION_MINOR 0
