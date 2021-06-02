@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/BSpline.hpp
+stdio.h
+-
+
+../src/Functor.hpp
+stdio.h
+-
+
+../src/Parametizer.hpp
+stdio.h
+-
+vector
+-
+math.h
+-
+BSpline.hpp
+../src/BSpline.hpp
+Functor.hpp
+../src/Functor.hpp
+
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/test.cpp
+BSplineCPPConfig.h
+-
+ios
+-
+iostream
+-
+iomanip
+-
+BSpline.hpp
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/BSpline.hpp
+Parametizer.hpp
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/Parametizer.hpp
+
+BSplineCPPConfig.h
+

@@ -1,0 +1,6 @@
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/build/CMakeFiles/rebuild_cache.dir
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/build/CMakeFiles/edit_cache.dir
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/build/CMakeFiles/test.dir
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/build/src/CMakeFiles/rebuild_cache.dir
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/build/src/CMakeFiles/edit_cache.dir
+/home/tigakub/catkin_ws/src/colab_reachy_control/src/BSpline/build/src/CMakeFiles/BSpline.dir

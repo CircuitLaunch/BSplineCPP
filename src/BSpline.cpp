@@ -7,8 +7,8 @@
 
 #include "BSpline.hpp"
 
-BSpline::BSpline(float *iCPBuffer, float *iKnotBuffer, int iMaxCount, int iOrder)
-: cpBuffer(iCPBuffer), knots(iKnotBuffer), stride(0), maxCPCount(iMaxCount), order(iOrder), cpCount(0)
+BSpline::BSpline(float *iCPBuffer, float *iKnotBuffer, int iOrder)
+: cpBuffer(iCPBuffer), knots(iKnotBuffer), stride(0), order(iOrder), cpCount(0)
 { }
 
 void BSpline::init(int iStride, int iCPCount)

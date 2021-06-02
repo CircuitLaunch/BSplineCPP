@@ -16,12 +16,11 @@ class BSpline
         float *cpBuffer;
         float *knots;
         int stride;
-        int maxCPCount;
         int order;
         int cpCount;
 
     public:
-        BSpline(float *iCPBuffer, float *iKnotBuffer, int iMaxCount, int iOrder = 4);
+        BSpline(float *iCPBuffer, float *iKnotBuffer, int iOrder = 4);
 
         virtual void init(int iStride, int iCPCount);
 
