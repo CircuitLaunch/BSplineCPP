@@ -86,12 +86,13 @@ int main(int argc, const char * argv[])
     // control point consists of 7 elements (7 joints), and therefore, dividing
     // by 7 returns the number of control points.
     int cpCount = sizeof(cps) / sizeof(float) / 7;
+    cout << "Control point count: " << cpCount << endl;
 
     // =========================================================================
-    // Allocate a buffer for a knot vector. Here I do it on the stack, but
-    // for large data-sets, you should allocate it dynamically or statically
-    // on the heap.
+    // Allocate a buffer for a knot vector.
     // -------------------------------------------------------------------------
+    // Here I do it on the stack, but for large data-sets, you should allocate
+    // it dynamically or statically on the heap.
     float knots[cpCount + 4];
 
     // =========================================================================
@@ -117,21 +118,46 @@ int main(int argc, const char * argv[])
 
     // =========================================================================
     // Instantiate a Parametizer object, and initialize it. The initializer
+    // -------------------------------------------------------------------------
     // calculates the lengths of all the segments using Gauss-Legendre
     // integration, caching them in an internal array, as well as the overall
     // length of the entire spline curve.
-    // -------------------------------------------------------------------------
     Parametizer param(spline);
     param.init();
-    cout << "Control point count: " << cpCount << endl;
-
     cout << "Spline length: " << param.length << endl;
 
-    float step = knots[cpCount + 3] / 20.0;
-    vector<float> jerkyParametization = param.parametizeLinear(20);
+
+    // =========================================================================
+    // Generate a parametization vector
+    // -------------------------------------------------------------------------
+    // The parametizeSigmoidal() function accepts an integer specifying the
+    // number parameters over which to interpolate. It is designed to ease into
+    // and out of the interpolation.
     vector<float> easedParametization = param.parametizeSigmoidal(20);
 
+    // =========================================================================
+    // Interpolate
+    // -------------------------------------------------------------------------
+    // Evaluate the spline parametrically.
+    float goal[7];
+    for(int j = 0; j < easedParametization.size(); j++) {
+        spline.eval(easedParametization[j], goal);
+        cout << " (" << goal[0];
+        for(int i = 1; i < 7; i++) {
+            cout << ", " << goal[i];
+        }
+        cout << ")" << endl;
+    }
+
+    // The following are for illustrative purposes only. They show the
+    // differences amongst naive, linear, and sigmoidal parametization, and
+    // are not necessary steps for the use of BSpline for interpolation.
+
+    // =========================================================================
+    // Interpolate without first parametizing
+    // -------------------------------------------------------------------------
     cout << "Naive parametization" << endl;
+    float step = knots[cpCount + 3] / 20.0;
     for(int i = 1; i <= 20; i++) {
         float t0 = (i-1) * step;
         float t1 = i * step;
@@ -145,7 +171,11 @@ int main(int argc, const char * argv[])
     }
     cout << endl;
 
+    // =========================================================================
+    // Interpolate linearly along the length of the spline
+    // -------------------------------------------------------------------------
     cout << "Linear parametization" << endl;
+    vector<float> jerkyParametization = param.parametizeLinear(20);
     for(int i = 1; i < jerkyParametization.size(); i++) {
         float t0 = jerkyParametization[i-1];
         float t1 = jerkyParametization[i];
@@ -159,6 +189,10 @@ int main(int argc, const char * argv[])
     }
     cout << endl;
 
+    // =========================================================================
+    // Interpolate sigmoidally, easing into and out along the length of the
+    // spline
+    // -------------------------------------------------------------------------
     cout << "Eased parametization" << endl;
     for(int i = 1; i < easedParametization.size(); i++) {
         float t0 = easedParametization[i-1];
@@ -171,18 +205,6 @@ int main(int argc, const char * argv[])
           << " d: " << setw(7) << setprecision(4) << fixed << right << a1 - a0
           << endl;
     }
-
-    /*
-    float goal[7];
-    for(int j = 0; j < 10; j++) {
-        spline.eval(easedParametization[j], goal);
-        cout << " (" << goal[0];
-        for(int i = 1; i < 7; i++) {
-            cout << ", " << goal[i];
-        }
-        cout << ")" << endl;
-    }
-    */
 
     return 0;
 }
