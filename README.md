@@ -131,7 +131,7 @@ You will notice that, unlike with Bezier curves, these parametric values are not
 
 Where ![l](https://latex.codecogs.com/svg.latex?l) is the distance along the curve, ![L](https://latex.codecogs.com/svg.latex?L) is the length of the entire curve, and ![x](https://latex.codecogs.com/svg.latex?x) is a value between 0 and 1. Here is a plot over a unit length curve.
 
-![graph of sigmoidal function](images/sigmoidal.png)
+&emsp;&emsp;&emsp;&emsp;![graph of sigmoidal function](images/sigmoidal.png)
 
 The `parametizeSigmoidal()` function iterates through a series of $l$ values and uses the Newton-Raphson method to approximate the parametric inputs that will result in those values.
 
