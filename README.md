@@ -90,7 +90,7 @@ The first thing the code does is calculate the number of control points in the t
 
 ```cpp
 	int cpCount = sizeof(cps) / sizeof(float) / 7;
-  cout << "Control point count: " << cpCount << endl;
+ 	cout << "Control point count: " << cpCount << endl;
 ```
 
 `sizeof()` returns the number of bytes occupied by an object or variable. Thus `sizeof(cps)` returns the number of bytes occupied by the cps array. Each element in the cps array is a floating point, the size of which is 4 bytes, but can be established in a portable manner by calling `sizeof(float)`. Dividing the number of bytes in the array, by the number of bytes per element returns the number of elements in the array. Each control point consists of 7 elements (7 joints), and therefore, dividing by 7 returns the number of control points. `cout` is a C++ object provided by the standard C++ library to stream output to the console. You can stream strings and other values with the `<<` output stream operator. `endl` is equivalent to `"\n"`, the end of line string.
@@ -108,15 +108,15 @@ The reason I allocate these buffers outside of `BSpline`, is because I originall
 Next I call BSpline::init() to initialize the knot vector. The first parameter is the number of floats per control point, i.e., the stride of the control point data. The second parameter is the number of control points. A third parameter can be passed in to specify the order, but the default value is 4 and should suffice for most purposes.
 
 ```cpp
- spline.init(7, cpCount);
+	spline.init(7, cpCount);
 ```
 
 At this point the spline object is ready to interpolate. However, for the reasons posed in the intro, we must first calculate an array of parametric values to produce predictable interpolation along the curve. I instantiate a `Parametizer` object to do this. The initializer calculates the lengths of all the segments using Gauss-Legendre integration, caching them in an internal array, as well as the overall length of the entire spline curve.
 
 ```cpp
 	Parametizer param(spline);
-  param.init();
-  cout << "Spline length: " << param.length << endl;
+ 	param.init();
+ 	cout << "Spline length: " << param.length << endl;
 ```
 
 The `parametizeSigmoidal()` function generates a vector of parametric values. The first value in this vector corresponds to the beginning of the curve, and the last value corresponds to the end.
@@ -127,11 +127,11 @@ The `parametizeSigmoidal()` function generates a vector of parametric values. Th
 
 You will notice that, unlike with Bezier curves, these parametric values are not normalized. The function produces a sigmoidal movement along the curve determined by:
 
-$$ l=L\frac 1 { 1 + e^{ -16.0 (x - 0.5)}}$$
+&emsp;&emsp;&emsp;&emsp;![l=L*(1/(1+e^(-16.0*(x-0.5)))](https://latex.codecogs.com/svg.latex?\Large&space;l=L\frac{1}{1+e^{-16.0(x-0.5)}})
 
-Where $l$ is the distance along the curve, $L$ is the length of the entire curve, and $x$ is a value between 0 and 1. Here is a plot over a unit length curve.
+Where ![l](https://latex.codecogs.com/svg.latex?l) is the distance along the curve, ![L](https://latex.codecogs.com/svg.latex?L) is the length of the entire curve, and ![x](https://latex.codecogs.com/svg.latex?x) is a value between 0 and 1. Here is a plot over a unit length curve.
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6d9bfcc8-365e-477c-a494-a56465d7b403/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6d9bfcc8-365e-477c-a494-a56465d7b403/Untitled.png)
+![graph of sigmoidal function](images/sigmoidal.png)
 
 The `parametizeSigmoidal()` function iterates through a series of $l$ values and uses the Newton-Raphson method to approximate the parametric inputs that will result in those values.
 
@@ -155,55 +155,55 @@ For illustrative purposes, the test program goes on to print out some telemetry 
 
 ```cpp
 	cout << "Naive parametization" << endl;
-  float step = knots[cpCount + 3] / 20.0;
-  for(int i = 1; i <= 20; i++) {
-      float t0 = (i-1) * step;
-      float t1 = i * step;
-      float a0 = param.arcLength(t0);
-      float a1 = param.arcLength(t1);
-      cout << "Arc " << setw(2) << i
-        << " t: " << setw(7) << setprecision(4) << fixed << right << t1
-        << " l: " << setw(7) << setprecision(4) << fixed << right << a1
-        << " d: " << setw(7) << setprecision(4) << fixed << right << a1 - a0
-        << endl;
-  }
-  cout << endl;
+ 	float step = knots[cpCount + 3] / 20.0;
+	for(int i = 1; i <= 20; i++) {
+	    float t0 = (i-1) * step;
+	    float t1 = i * step;
+	    float a0 = param.arcLength(t0);
+	    float a1 = param.arcLength(t1);
+	    cout << "Arc " << setw(2) << i
+		 << " t: " << setw(7) << setprecision(4) << fixed << right << t1
+		 << " l: " << setw(7) << setprecision(4) << fixed << right << a1
+		 << " d: " << setw(7) << setprecision(4) << fixed << right << a1 - a0
+		 << endl;
+	}
+	cout << endl;
 ```
 
 Linear parametization eliminates the stretching and guarantees uniform interpolation from beginning to end.
 
 ```cpp
 	cout << "Linear parametization" << endl;
-  vector<float> jerkyParametization = param.parametizeLinear(20);
-  for(int i = 1; i < jerkyParametization.size(); i++) {
-    float t0 = jerkyParametization[i-1];
-    float t1 = jerkyParametization[i];
-    float a0 = param.arcLength(t0);
-    float a1 = param.arcLength(t1);
-    cout << "Arc " << setw(2) << i
-      << " t: " << setw(7) << setprecision(4) << fixed << right << t1
-      << " l: " << setw(7) << setprecision(4) << fixed << right << a1
-      << " d: " << setw(7) << setprecision(4) << fixed << right << a1 - a0
-      << endl;
-  }
-  cout << endl;
+  	vector<float> jerkyParametization = param.parametizeLinear(20);
+  	for(int i = 1; i < jerkyParametization.size(); i++) {
+	    float t0 = jerkyParametization[i-1];
+	    float t1 = jerkyParametization[i];
+	    float a0 = param.arcLength(t0);
+	    float a1 = param.arcLength(t1);
+	    cout << "Arc " << setw(2) << i
+      		 << " t: " << setw(7) << setprecision(4) << fixed << right << t1
+      		 << " l: " << setw(7) << setprecision(4) << fixed << right << a1
+      		 << " d: " << setw(7) << setprecision(4) << fixed << right << a1 - a0
+      		 << endl;
+  	}
+  	cout << endl;
 ```
 
 The sinusoidal parametization produces a cushy acceleration and deceleration.
 
 ```cpp
 	cout << "Eased parametization" << endl;
-  for(int i = 1; i < easedParametization.size(); i++) {
-    float t0 = easedParametization[i-1];
-    float t1 = easedParametization[i];
-    float a0 = param.arcLength(t0);
-    float a1 = param.arcLength(t1);
-    cout << "Arc " << setw(2) << i
-      << " t: " << setw(7) << setprecision(4) << fixed << right << t1
-      << " l: " << setw(7) << setprecision(4) << fixed << right << a1
-      << " d: " << setw(7) << setprecision(4) << fixed << right << a1 - a0
-      << endl;
+	for(int i = 1; i < easedParametization.size(); i++) {
+	    float t0 = easedParametization[i-1];
+	    float t1 = easedParametization[i];
+	    float a0 = param.arcLength(t0);
+ 	    float a1 = param.arcLength(t1);
+	    cout << "Arc " << setw(2) << i
+	         << " t: " << setw(7) << setprecision(4) << fixed << right << t1
+	         << " l: " << setw(7) << setprecision(4) << fixed << right << a1
+	         << " d: " << setw(7) << setprecision(4) << fixed << right << a1 - a0
+	         << endl;
 	}
 
-  return 0;
+	return 0;
 ```
